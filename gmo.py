@@ -91,7 +91,7 @@ class gmo():
 		start_day_before = start - timedelta(days=1) # 当日を指定しても午前6時からのデータになるため前日の日付を使う
 		today = datetime.now(self.jst) # 今日の日付(JST)
 		# GMOコインのデータは午前6時から日付が変わるため6時を区切りに日付を指定
-		if today.hour > 6: today = today
+		if today.hour >= 6: today = today
 		else: today -= timedelta(days=1)
 
 		# ローソク足データをデータフレームに変換する際に使う変数
