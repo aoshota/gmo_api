@@ -314,3 +314,26 @@ class gmo():
 		}
 
 		return requests.get(self.endpoint_private + path, headers=headers, params=parameters)
+
+	# 一括決済注文
+	def close_all_order(self,symbol,side,size):
+		timestamp = '{0}000'.format(int(time.mktime(datetime.now().timetuple())))
+		method    = 'POST'
+		path      = '/v1/closeBulkOrder'
+		reqBody = {
+			"symbol": symbol,
+			"side": side,
+			"executionType": "MARKET",
+			"size": size
+		}
+
+		text = timestamp + method + path + json.dumps(reqBody)
+		sign = hmac.new(bytes(self.secretkey.encode('ascii')), bytes(text.encode('ascii')), hashlib.sha256).hexdigest()
+
+		headers = {
+			"API-KEY": self.apikey,
+			"API-TIMESTAMP": timestamp,
+			"API-SIGN": sign
+		}
+
+		return requests.post(self.endpoint_private + path, headers=headers, data=json.dumps(reqBody))
