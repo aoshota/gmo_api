@@ -337,3 +337,25 @@ class gmo():
 		}
 
 		return requests.post(self.endpoint_private + path, headers=headers, data=json.dumps(reqBody))
+
+	# 建玉一覧を取得
+	def get_open_position(self,symbol):
+		timestamp = '{0}000'.format(int(time.mktime(datetime.now().timetuple())))
+		method    = 'GET'
+		path      = '/v1/openPositions'
+
+		text = timestamp + method + path
+		sign = hmac.new(bytes(self.secretkey.encode('ascii')), bytes(text.encode('ascii')), hashlib.sha256).hexdigest()
+		parameters = {
+			"symbol": symbol,
+			"page": 1,
+			"count": 100
+		}
+
+		headers = {
+			"API-KEY": self.apikey,
+			"API-TIMESTAMP": timestamp,
+			"API-SIGN": sign
+		}
+
+		return requests.get(self.endpoint + path, headers=headers, params=parameters)
