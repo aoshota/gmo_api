@@ -148,6 +148,21 @@ class gmo():
 
 		return requests.get(self.endpoint_private + path, headers=headers)
 
+	# 資産残高を取得
+	def get_assets(self):
+		timestamp = '{0}000'.format(int(time.mktime(datetime.now().timetuple())))
+		method = 'GET'
+		path = '/v1/account/assets'
+		text = timestamp + method + path
+		sign = hmac.new(bytes(self.secretkey.encode('ascii')), bytes(text.encode('ascii')), hashlib.sha256).hexdigest()
+		headers = {
+			"API-KEY": self.apikey,
+			"API-TIMESTAMP": timestamp,
+			"API-SIGN": sign
+		}
+
+		return requests.get(self.endpoint_private + path, headers=headers)
+
 	# 新規注文
 	def create_new_order(self,symbol,side,type,price,size,timeInForce=''):
 		timestamp = '{0}000'.format(int(time.mktime(datetime.now().timetuple())))
